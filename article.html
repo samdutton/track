@@ -38,18 +38,18 @@ if (typeof videoElement.textTracks === "undefined") {
 
 <p>The track element provides a simple, standardised way to add subtitles, captions, screen reader descriptions and chapters to video and audio.</p>
 
-<p>Tracks can also be used for arbitrary timed metadata. The src for each track element is a text file made up of a list of timed 'cues', and cues can include data in formats such as JSON or CSV. This is extremely powerful, enabling media navigation via text search, for example, or DOM manipulation and other behaviour synchronised with media playback.</p>
+<p>Tracks can also be used for other kinds of timed metadata. The source data for each track element is a text file made up of a list of timed 'cues', and cues can include data in formats such as JSON or CSV. This is extremely powerful, enabling media navigation via text search, for example, or DOM manipulation and other behaviour synchronised with media playback.</p>
 
-<p>The track element is currently available in <a href="http://ie.microsoft.com/testdrive/" title="Internet Explorer 10 download">Internet Explorer 10</a> and <a href="http://tools.google.com/dlpage/chromesxs" title="Chrome Canary download">Chrome 18</a>+. Firefox support is <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=629350" title="Firefox track element implementation bug report">not yet implemented</a>. Note that in Chrome, you will need to enable track element support from the <a href="chrome://flags" title="chrome://flags page">chrome://flags</a> page.</p>
+<p>The track element is currently available in <a href="http://ie.microsoft.com/testdrive/" title="Internet Explorer 10 download">Internet Explorer 10</a> and <a href="http://tools.google.com/dlpage/chromesxs" title="Chrome Canary download">Chrome 18</a>+. Firefox support is <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=629350" title="Firefox track element implementation bug report">not yet implemented</a>. In Chrome, track element support must be enabled from the <a href="chrome://flags" title="chrome://flags page">chrome://flags</a> page.</p>
 
-<p>Below is a simple example of a video with a track element -- play it to see subtitles in English:</p>
+<p>Below is a simple example of a video with a track element. Play it to see subtitles in English:</p>
 
 <video controls class="trackSupported">
     <source src="video/developerStories-en.webm" type='video/webm; codecs="vp8, vorbis"' />
     <track  src="tracks/developerStories-subtitles-en.vtt" label="English subtitles" kind="subtitles" srclang="en" default />
 </video>
 
-<div class="warningMessage trackNotSupported">This demo requires a browser such as <a href="http://tools.google.com/dlpage/chromesxs" title="Google Chrome Canary download">Google Chrome Canary</a> that supports the track element.</div>
+<div class="warningMessage trackNotSupported">This demo requires a browser such as <a href="http://tools.google.com/dlpage/chromesxs" title="Google Chrome Canary download">Google Chrome Canary</a> that supports the track element. In Chrome you must enable track element support on the chrome://flags page.</div>
 
 <p>Code for a video element with subtitles in English and German might look like this:</p>
 
@@ -62,7 +62,7 @@ if (typeof videoElement.textTracks === "undefined") {
 
 <p>In this example, the video element would display a selector giving the user a choice of subtitle languages. (Though at the time of writing, that hasn't yet been implemented).</p>
 
-<p>Note that the track element cannot be used from file:// URLs: to see tracks in action, you will need to use a web server.</p>
+<p>Note that the track element cannot be used from file:// URLs. To see tracks in action, put files on a web server.</p>
 
 <p>Each track element has an attribute for <code>kind</code>, which can be <code>subtitles</code>, <code>captions</code>, <code>descriptions</code>, <code>chapters</code> or <code>metadata</code>. The track element <code>src</code> attribute points to the text file that holds data for timed track cues. Chrome uses the WebVTT format for track files; a WebVTT file looks like this:</p>
 
@@ -132,7 +132,7 @@ var textTrack = textTracks[0]; // corresponds to the first track element
 var kind = textTrack.kind // e.g. "subtitles"
 </pre>
 
-<p>Each <code>TextTrack</code> in turn has a <code>cues</code> property that returns a <code>TextTrackCueList</code>, each member of which is an individual cue. Cue data can be accessed with properties such as <code>startTime</code>, <code>endTime</code> and <code>text</code> (used to get the text content of the cue):</p>
+<p>Each <code>TextTrack</code>, in turn, has a <code>cues</code> property that returns a <code>TextTrackCueList</code>, each member of which is an individual cue. Cue data can be accessed with properties such as <code>startTime</code>, <code>endTime</code> and <code>text</code> (used to get the text content of the cue):</p>
 
 <pre>
 var cues = textTrack.cues;
@@ -147,7 +147,7 @@ var trackElements = document.querySelectorAll("track");
 // for each track element
 for (var i = 0; i != trackElements.length; i++) {
 	trackElements[i].addEventListener("load", function(){			
-		var textTrack = this.track; // gotcha: "this" is a track *element*
+		var textTrack = this.track; // gotcha: "this" is an HTMLTrackElement, not a TextTrack
 		var isSubtitles = textTrack.kind === "subtitles"; // for example...
 		// for each cue
 		for (var j = 0; j != textTrack.cues.length; ++j) {
@@ -157,11 +157,11 @@ for (var i = 0; i != trackElements.length; i++) {
 }
 </pre>
 
-<p>Note that, as in this example, the <code>TextTrack</code> property for a track element is accessed via its <code>track</code> property.</p>
+<p>As in this example, <code>TextTrack</code> properties are accessed via a track element's <code>track</code> property, not the element itself. </p>
 
 <h2>Track and cue events</h2>
 
-<p>There are two types of cue event:
+<p>The two types of cue event are:
 <ul>
 	<li>enter and exit events fired for cues</li>
 	<li>cuechange events fired for tracks. </li>
@@ -195,11 +195,11 @@ textTrack.oncuechange = function (){
 
 <h2>Not just for video</h2>
 
-<p>Don't forget that tracks can be used with audio as well as video &ndash; and that you don't need audio, video or track elements in HTML markup to take advantage of their APIs. The TextTrack API <a href="http://dev.w3.org/html5/spec/video.html#text-track-api" title="W3C TextTrack API documentation">documentation</a> has a nice example of this, showing a neat way to implement audio 'sprites':</p>
+<p>Don't forget that tracks can be used with audio as well as video&ndash;and that you don't need audio, video or track elements in HTML markup to take advantage of their APIs. The TextTrack API <a href="http://dev.w3.org/html5/spec/video.html#text-track-api" title="W3C TextTrack API documentation">documentation</a> has a nice example of this, showing a neat way to implement audio 'sprites':</p>
 
 <pre>
 var sfx = new Audio('sfx.wav');
-var track = sfx.addTextTrack('metadata');
+var track = sfx.addTrack('metadata');
 
 // Add cues for sounds we care about.
 track.addCue(new TextTrackCue('dog bark', 12.783, 13.612, '', '', '', true));
@@ -220,7 +220,7 @@ playSound('kitten mew');
 
 <p>Note that <code>startTime</code> and <code>endTime</code> use floating point values in seconds, and not the hours:minutes:seconds:milliseconds format used by WebVTT.</p>
 
-<p>Cues can also be removed with removeCue(), which takes a cue as its argument, for example:</p>
+<p>Cues can also be removed with <code>removeCue()</code>, which takes a cue as its argument, for example:</p>
 
 <pre>
 var videoElement = document.querySelector("video");
@@ -229,9 +229,9 @@ var activeCue = track.activeCues[0];
 track.removeCue(activeCue);
 </pre>
 
-<p>If you try this out, you'll notice that a rendered cue is removed as soon as this code is called.</p>
+<p>If you try this out, you'll notice that a rendered cue is removed as soon as the code is called.</p>
 
-<p>Note that tracks have a <code>mode</code> attribute, which can be 0 (disabled), 1 (hidden) or 2 (showing). This can be useful if you want to use track events but turn off default rendering &ndash; play the following video to see an example of this (built by <a href="http://html5-demos.appspot.com/static/whats-new-with-html5-media/template/index.html#3" title="Eric Bidelman HTML5 demo slide deck">Eric Bidelman</a>):</p>
+<p>Tracks have a <code>mode</code> attribute, which can be 0 (disabled), 1 (hidden) or 2 (showing). This can be useful if you want to use track events but turn off default rendering&ndash;play the following video to see an example of this (built by <a href="http://html5-demos.appspot.com/static/whats-new-with-html5-media/template/index.html#3" title="Eric Bidelman HTML5 demo slide deck">Eric Bidelman</a>):</p>
 
 <div id="eric">
   <video width="400" controls>
@@ -292,17 +292,17 @@ track.oncuechange = function(e) {
 }
 </pre>
 
-<p>Silvia Pfeiffer's <a href="http://html5videoguide.net/presentations/WebVTT/#title-slide" title="HTML5 Video Accessibility slides">HTML5 Video Accessibility</a> slides gives more examples of working with markup &ndash; as well as showing how to build chapter tracks for navigation and description tracks for screen readers.</p>
+<p>Silvia Pfeiffer's <a href="http://html5videoguide.net/presentations/WebVTT/#title-slide" title="HTML5 Video Accessibility slides">HTML5 Video Accessibility</a> slides gives more examples of working with markup&ndash;as well as showing how to build chapter tracks for navigation and description tracks for screen readers.</p>
 
 <h2>And finally...</h2>
 
-<p>Storing cue data in text files, rather than encoding them in audio or video files, makes subtitling and captioning straightforward &ndash; and can improve accessibility, searchability, and data portability.</p>
+<p>Storing cue data in text files, rather than encoding them in audio or video files, makes subtitling and captioning straightforward&ndash;and can improve accessibility, searchability and data portability.</p>
 
 <p>The track element also has enables the use of timed metadata and dynamic content linked to media playback, which in turn makes the audio and video elements more powerful and flexible.</p>
 
 <p>Given its power, flexibility and simplicity, the track element is a big step towards making media on the Web more open and more dynamic.</p>
 
-<h2>Documentation</h2>
+<h2>Learn more</h2>
 
 <p>WHATWG HTML Living Standard: <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html#the-track-element">http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html#the-track-element</a></p>
 

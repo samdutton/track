@@ -119,13 +119,14 @@ videoElement.addEventListener("loadedmetadata", function(e){
 	$("#searchInput").autocomplete({
 		select: function(event, ui) { // when autocomplete item selected
 			// each label consists of start time and cue text, e.g.
-			// "0.5s: The Web is always changing"
-			console.log(ui);
+			// "00:05: The Web is always changing"
 			var label = ui.item.label; 
-			var startTime = label.split(":")[0]; 
-			videoElement.currentTime = parseInt(startTime);
+			// startTime is in hh:mm format
+			var minutes = parseInt(label.split(":")[0]);
+			var seconds = parseInt(label.split(":")[1]);
+			var startTimeSeconds = (60 * minutes) + seconds;
+			videoElement.currentTime = startTimeSeconds;
 			videoElement.play();
-			// alert("Sorry! Because of a bug, it's not yet possible to set the current time for a video using a track element. The time you selected was " + startTime + ".");
 		},
 		source: subtitles
 	});
