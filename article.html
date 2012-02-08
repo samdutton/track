@@ -8,7 +8,7 @@
 <meta name="keywords" content="track element, html5, video, audio, accessibility, Sam Dutton" /> 
 <meta name="Description" content="The HTML5 track element provides a simple, standardised way to add subtitles, captions, screen reader descriptions, chapters and timed metadata to video and audio." /> 
 
-<title>Using the track element with HTML5 audio and video</title>
+<title>Getting started with the HTML5 track element</title>
 
 <link type="text/css" href="css/article.css" rel="stylesheet" />	
 <script type="text/javascript" src="js/lib/jquery-1.7.1.min.js"></script>
@@ -34,7 +34,7 @@ if (typeof videoElement.textTracks === "undefined") {
 
 <div id="container">
 
-<h1>Using the track element with HTML5 audio and video</h1>
+<h1>Getting started with the HTML5 track element</h1>
 
 <p>The track element provides a simple, standardised way to add subtitles, captions, screen reader descriptions and chapters to video and audio.</p>
 
@@ -86,9 +86,21 @@ that touched the lead to the pages of your manuscript.
 
 <!-- subtitle search example -->
 
-<h2>Using timed metadata in JSON format</h2>
+<h2>Using HTML and JSON in cues</h2>
 
-<p>The text of a cue in a WebVTT file can span multiple lines, as long as none of the lines is blank. For example:</p>
+<p>The text of a cue in a WebVTT file can span multiple lines, as long as none of the lines are blank. That means cues can include HTML:</p>
+
+<pre>
+WEBVTT FILE
+
+multiCell
+00:01:15.200 --> 00:02:18.800
+<p>Multi-celled organisms have different types of cells that perform specialised functions.</p>
+<p>Most life that can be seen with the naked eye is multi-cellular.</p>
+<p>These organisms are though to have evolved around 1 billion years ago with plants, animals and fungi having independent evolutionary paths.</p>
+</pre>
+
+<p>Why stop there? Cues can also use JSON:</p>
 
 <pre>
 WEBVTT FILE
@@ -119,7 +131,7 @@ insects
 }
 </pre>
 
-<p>As shown in this example, the ability to use JSON in cues makes the track element extremely powerful and flexible. A web app can listen for cue events, extract the text of each cue as it fires, parse the JSON and then use the results to make DOM changes (or perform other JavaScript or CSS tasks) synchronised with media playback.</p>
+<p>The ability to use structured data in cues makes the track element extremely powerful and flexible. A web app can listen for cue events, extract the text of each cue as it fires, parse the data and then use the results to make DOM changes (or perform other JavaScript or CSS tasks) synchronised with media playback. Timed metadata can add considerable value to media, open up deep navigation and enable better search.</p>
 
 <h2>Getting at tracks and cues with JavaScript</h2>
 
@@ -130,6 +142,7 @@ var videoElement = document.querySelector("video");
 var textTracks = videoElement.textTracks; // one for each track element
 var textTrack = textTracks[0]; // corresponds to the first track element
 var kind = textTrack.kind // e.g. "subtitles"
+var mode = textTrack.mode // 0 (TextTrack.OFF in spec, TextTrack.DISABLED in Chrome), 1 (TextTrack.HIDDEN) or 2 (TextTrack.SHOWING)
 </pre>
 
 <p>Each <code>TextTrack</code>, in turn, has a <code>cues</code> property that returns a <code>TextTrackCueList</code>, each member of which is an individual cue. Cue data can be accessed with properties such as <code>startTime</code>, <code>endTime</code> and <code>text</code> (used to get the text content of the cue):</p>
@@ -137,6 +150,7 @@ var kind = textTrack.kind // e.g. "subtitles"
 <pre>
 var cues = textTrack.cues;
 var cue = cues[0]; // corresponds to the first cue in a track src file
+var cueId = cue.id // cue.id corresponds to the cue id set in the WebVTT file
 var cueText = cue.text; // "The Web is always changing", for example (or some JSON!)
 </pre>
 
@@ -231,7 +245,7 @@ track.removeCue(activeCue);
 
 <p>If you try this out, you'll notice that a rendered cue is removed as soon as the code is called.</p>
 
-<p>Tracks have a <code>mode</code> attribute, which can be 0 (disabled), 1 (hidden) or 2 (showing). This can be useful if you want to use track events but turn off default rendering&ndash;play the following video to see an example of this (built by <a href="http://html5-demos.appspot.com/static/whats-new-with-html5-media/template/index.html#3" title="Eric Bidelman HTML5 demo slide deck">Eric Bidelman</a>):</p>
+<p>Tracks have a <code>mode</code> attribute, which can be 0 (TextTrack.OFF in spec, TextTrack.DISABLED in Chrome), 1 (TextTrack.HIDDEN) or 2 (TextTrack.SHOWING). This can be useful if you want to use track events but turn off default rendering&ndash;play the following video to see an example of this (built by <a href="http://html5-demos.appspot.com/static/whats-new-with-html5-media/template/index.html#3" title="Eric Bidelman HTML5 demo slide deck">Eric Bidelman</a>):</p>
 
 <div id="eric">
   <video width="400" controls>
@@ -292,13 +306,13 @@ track.oncuechange = function(e) {
 }
 </pre>
 
-<p>Silvia Pfeiffer's <a href="http://html5videoguide.net/presentations/WebVTT/#title-slide" title="HTML5 Video Accessibility slides">HTML5 Video Accessibility</a> slides gives more examples of working with markup&ndash;as well as showing how to build chapter tracks for navigation and description tracks for screen readers.</p>
+<p>Silvia Pfeiffer's <a href="http://html5videoguide.net/presentations/WebVTT/#title-slide" title="HTML5 Video Accessibility slides">HTML5 Video Accessibility</a> slides give more examples of working with markup&ndash;as well as showing how to build chapter tracks for navigation and description tracks for screen readers.</p>
 
 <h2>And finally...</h2>
 
 <p>Storing cue data in text files, rather than encoding them in audio or video files, makes subtitling and captioning straightforward&ndash;and can improve accessibility, searchability and data portability.</p>
 
-<p>The track element also has enables the use of timed metadata and dynamic content linked to media playback, which in turn makes the audio and video elements more powerful and flexible.</p>
+<p>The track element also enables the use of timed metadata and dynamic content linked to media playback, which in turn makes the audio and video elements more powerful and flexible.</p>
 
 <p>Given its power, flexibility and simplicity, the track element is a big step towards making media on the Web more open and more dynamic.</p>
 
@@ -313,6 +327,10 @@ track.oncuechange = function(e) {
 <p>Timed track formats: <a href="http://wiki.whatwg.org/wiki/Timed_track_formats">http://wiki.whatwg.org/wiki/Timed_track_formats</a></p>
 
 <p>Timed track use cases: <a href="http://wiki.whatwg.org/wiki/Timed_tracks">http://wiki.whatwg.org/wiki/Timed_tracks</a></p>
+
+<p>Synchronised timed metadata and live broadcast: </p>
+
+<p></p>
 
 </body>
 
