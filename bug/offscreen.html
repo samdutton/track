@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+
+<title>The track element: offscreen crash bug</title>
+
+<style>
+
+body{
+text-align: center;
+}
+video{
+height: 360px;
+margin: 0 0 800px 0;
+width: 640px;
+}
+p {
+font-family: Open Sans, sans-serif;
+}
+</style>
+
+</head>
+
+<body>
+
+<p>Scroll the video offscreen to cause Chrome to crash</p>
+
+
+<video controls autoplay>
+    <source src="../video/developerStories-en.webm" type='video/webm; codecs="vp8, vorbis"' />
+    <source src="../video/developerStories-en.webm" type='video/webm; codecs="vp8, vorbis"' />
+    <track label="English subtitles" kind="subtitles" srclang="en" src="../tracks/developerStories-subtitles-en.vtt" default />
+</video>
+
+</body>
+
+</html>
+
+

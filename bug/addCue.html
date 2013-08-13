@@ -14,13 +14,14 @@
 
 <video controls autoplay>
     <source src="../video/developerStories-en.webm" type='video/webm; codecs="vp8, vorbis"' />
+    <source src="../video/developerStories-en.webm" type='video/webm; codecs="vp8, vorbis"' />
     <track label="English subtitles" kind="subtitles" srclang="en" src="../tracks/developerStories-subtitles-en.vtt" default />
 </video>
 
 <script>
 var video = document.querySelector("video");
 video.addEventListener("loadedmetadata", function(){
-	var newTrack = video.addTrack("subtitles", "French subtitles", "fr");
+	var newTrack = video.addTextTrack("subtitles", "French subtitles", "fr");
 	newTrack.mode = 2;
 	newTrack.addCue(new TextTrackCue("myId", 0.000, 10.000, "Bonjour!"));
 });

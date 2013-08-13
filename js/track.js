@@ -100,7 +100,7 @@ for (var i = 0; i != trackElements.length; i++) {
 			}
 		}	
 		if (isMetadata){
-			textTrack.mode = 1; // emit events but do not show as subtitles
+			textTrack.mode = TextTrack.HIDDEN; // emit events but do not show as subtitles
 			textTrack.oncuechange = handleMetadataCueChange; 
 			// hack!!! hard-coded here...
 			$('#carousel').jcarousel({

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+
+<title>The track element: offscreen crash bug</title>
+
+<style>
+
+body{
+text-align: center;
+}
+video{
+height: 360px;
+margin: 0 0 800px 0;
+width: 640px;
+}
+p {
+font-family: Open Sans, sans-serif;
+}
+</style>
+
+</head>
+
+<body>
+
+
+<video controls autoplay>
+    <source src="../video/developerStories-en.webm" type='video/webm; codecs="vp8, vorbis"' />
+	<source src="../video/developerStories-en.mp4"  type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+    <source src="../video/developerStories-en.webm" type='video/webm; codecs="vp8, vorbis"' />
+		<track label="GBike track" kind="metadata" srclang="en" src="tracks/gbike.vtt" default />
+</video>
+
+<script>
+var trackElement = document.querySelector("track");
+trackElement.addEventListener("load", function(){
+	var textTrack = this.track;
+	for (var i = 0; i !== textTrack.cues.length; ++i) { 
+		var cue = textTrack.cues[i];
+		console.log(i, cue.text);
+		var cueObj = JSON.parse(cue.text);
+		console.log(cueObj);
+	}
+});
+
+</script>
+
+</body>
+
+</html>
+
+
